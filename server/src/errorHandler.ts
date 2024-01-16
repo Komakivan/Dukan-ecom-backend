@@ -2,7 +2,8 @@ import { NextFunction, Request, Response } from "express"
 import HttpException, { ErrorCode } from "./exceptions/root"
 import { InternalException } from "./exceptions/internal-errors"
 
-
+// custom error handler to wrap all controllers so that "try{} catch(){}" can be skipped in the controllers
+// its asynchronou: takes in a controller as an argument and returns a controller
  export const errorHandle = (method: Function) => {
     return async (req:Request, res:Response, next:NextFunction) => {
         try {

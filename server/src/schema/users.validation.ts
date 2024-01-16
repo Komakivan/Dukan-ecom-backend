@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-
+// validations for user inputs
 export const registerSchema = z.object({
     name: z.string(),
     email: z.string().email(),

@@ -20,7 +20,7 @@ export const prismaClient = new PrismaClient({
 
 app.use(rootRouter)
 
-app.use(errorMiddleWare)
+app.use(errorMiddleWare) // to make express work with the custome errors
 
 // funtion to start the server
 function startServer () {

@@ -1,11 +1,12 @@
 // message, error codes, errors, status code
 
-class HttpException extends Error {
+class HttpException extends Error { // extend HttpException from Error class
     message: string;
     errorCode: ErrorCode;
     statusCode: number;
     errors: any;
 
+    // define arguments in desire order
     constructor(message: string, errorCode: ErrorCode, statusCode: number, errors:any) {
         super(message)
         this.message = message;
@@ -14,6 +15,7 @@ class HttpException extends Error {
         this.errors = errors;
     }
 }
+
 
 export enum ErrorCode {
     USER_NOT_FOUND = 1001,
