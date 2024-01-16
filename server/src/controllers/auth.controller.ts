@@ -5,6 +5,8 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../secrets';
 import { BadRequestException } from '../exceptions/bad-requests';
 import { ErrorCode } from '../exceptions/root';
+import { UnprocessableEntity } from '../exceptions/validation';
+import { loginSchema, registerSchema } from '../schema/users.validation';
 
 
 /**
@@ -13,8 +15,9 @@ import { ErrorCode } from '../exceptions/root';
  * @param res {Object} Response - Response object
  */
 const registerUser = async  (req: Request, res: Response, next:NextFunction) => {
-    try {
         const { name, email, password } = req.body
+        // perform an input validatio
+        registerSchema.parse(req.body)
         // check if user is already registered
         let user = await prismaClient.user.findFirst({ where: { email: email}})
         if(user) {
@@ -31,9 +34,6 @@ const registerUser = async  (req: Request, res: Response, next:NextFunction) => 
             }
         })
         res.json(user)
-    } catch (error: any) {
-        console.log("Problem creating user", error)
-    }
 }
 
 
@@ -45,8 +45,9 @@ const registerUser = async  (req: Request, res: Response, next:NextFunction) => 
  */
 
 const loginUser = async (req:Request, res:Response, next:NextFunction) => {
-    try {
         const { email, password } = req.body;
+        // validate the user input
+        loginSchema.parse(req.body)
         // find the user from the database
         const user = await prismaClient.user.findFirst({where: {email:email}})
         if(!user) {
@@ -61,9 +62,7 @@ const loginUser = async (req:Request, res:Response, next:NextFunction) => {
         // generate a token
         const token = jwt.sign({userId: user.id}, JWT_SECRET_KEY, { expiresIn: "15m"})
         res.status(200).json({user, token})
-    } catch (error) {
-        res.status(500).json({message: "Error signing in", error})
-    }
+    
 }
 
 

@@ -3,6 +3,7 @@ import { PORT } from './secrets';
 import rootRouter from './routes/index.routes';
 import { PrismaClient } from '@prisma/client';
 import { errorMiddleWare } from './middlewares/errors';
+import { registerSchema } from './schema/users.validation';
 
 
 // intialize the expres application
