@@ -34,20 +34,31 @@ const createProduct = async (req:Request, res:Response) => {
  */
 
 const updateProduct = async (req:Request, res:Response, next:NextFunction) => {
-    // validate the request input
-    productValidation.parse(req.body)
-    const productId = req.params.id
-    // get the product from the database and check where it exists
-    let product = await prismaClient.product.findFirst({ where: { id: Number(req.params.id) }})
-    if(!product) {
-        return next(new NotFoundException("Product not found", ErrorCode.PRODUCT_NOT_FOUND))
+
+    console.log("route reached ...")
+   
+    try {
+         // get the product from request body
+    const product = req.body
+    // check if tags is present and perform -> .join(",") on it
+    if(product.tags) {
+        product.tags = product.tags.join(",")
     }
-    // update product
-    product = await prismaClient.product.update({ where: { id: Number(req.params.id)},
-                    data: {
-                        ...req.body
-                    }
-            })
+    // update the product
+    const updatedproduct = await prismaClient.product.update(
+        { 
+            where: { id: +req.params.id},
+            data: product
+        }
+    )
+
+    console.log(updatedproduct)
+
+    res.status(200).json(updatedproduct)
+    } catch (error) {
+        throw new NotFoundException("Product not found", ErrorCode.PRODUCT_NOT_FOUND)
+    }
+   
 
 }
 
