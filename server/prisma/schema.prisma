@@ -23,8 +23,22 @@ model User {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   role Role @default(USER)
+  address Address[]
 
   @@map("users")
+}
+
+model Address {
+  id Int @id @default(autoincrement())
+  lineOne String
+  lineTwo String
+  city String
+  country String
+  pincode Int
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("addresses")
 }
 
 // product model
