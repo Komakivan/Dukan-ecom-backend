@@ -34,7 +34,7 @@ model Address {
   lineTwo String
   city String
   country String
-  pincode Int
+  pincode String
   userId Int
   user User @relation(fields: [userId], references: [id])
 
