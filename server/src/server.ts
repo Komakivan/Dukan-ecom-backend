@@ -4,6 +4,7 @@ import rootRouter from './routes/index.routes';
 import { PrismaClient } from '@prisma/client';
 import { errorMiddleWare } from './middlewares/errors';
 import { registerSchema } from './schema/users.validation';
+import authMiddleWare from './middlewares/auth.middleware';
 
 
 // intialize the expres application
@@ -19,6 +20,7 @@ export const prismaClient = new PrismaClient({
 
 
 app.use(rootRouter)
+
 
 app.use(errorMiddleWare) // to make express work with the custome errors
 

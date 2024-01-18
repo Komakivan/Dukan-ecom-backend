@@ -9,5 +9,5 @@ export const errorMiddleWare = (error: HttpException, req:Request, res:Response,
         errors: error.errors
     })
 
-    next()
+    // next()
 }

@@ -10,6 +10,11 @@ datasource db {
   url      = "mysql://root:komak07884@localhost:3306/Dukan"
 }
 
+enum Role {
+  ADMIN
+  USER
+}
+
 model User {
   id Int @id @default(autoincrement())
   name String
@@ -17,6 +22,20 @@ model User {
   password String
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+  role Role @default(USER)
 
   @@map("users")
+}
+
+// product model
+model Product {
+  id Int @id @default(autoincrement())
+  name String
+  description String
+  price Decimal
+  tags String
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@map("products")
 }

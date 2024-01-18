@@ -5,8 +5,9 @@ import jwt from 'jsonwebtoken';
 import { JWT_SECRET_KEY } from '../secrets';
 import { BadRequestException } from '../exceptions/bad-requests';
 import { ErrorCode } from '../exceptions/root';
-import { UnprocessableEntity } from '../exceptions/validation';
 import { loginSchema, registerSchema } from '../schema/users.validation';
+import { NotFoundException } from '../exceptions/404.exception';
+import { User } from '@prisma/client';
 
 
 /**
@@ -51,7 +52,7 @@ const loginUser = async (req:Request, res:Response, next:NextFunction) => {
         // find the user from the database
         const user = await prismaClient.user.findFirst({where: {email:email}})
         if(!user) {
-            return  next(new BadRequestException("User does not exist", ErrorCode.USER_NOT_FOUND))
+            return  next(new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND))
             // return res.status(404).json({message: "user not found"})
         }
         // compare the password
@@ -60,12 +61,29 @@ const loginUser = async (req:Request, res:Response, next:NextFunction) => {
             return next(new BadRequestException("incorrect password", ErrorCode.INCORRECT_PASSWORD))
         }
         // generate a token
-        const token = jwt.sign({userId: user.id}, JWT_SECRET_KEY, { expiresIn: "15m"})
+        const token = jwt.sign({userId: user.id}, JWT_SECRET_KEY, { expiresIn: "24h"})
         res.status(200).json({user, token})
     
 }
 
 
+/**
+ * 
+ * @param req {object} - Request object
+ * @param res {object} - Response object
+ */
+
+// type AuthRequest = Request & { user?:User}
+
+// returns the logged in user
+const me = async (req:Request, res:Response, next:NextFunction) => {
+    // @ts-ignore
+    res.json(req.user)
+    // res.json(req.user)
+
+}
 
 
-export { loginUser, registerUser }
+
+
+export { loginUser, registerUser, me }
