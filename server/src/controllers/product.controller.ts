@@ -83,8 +83,6 @@ const deleteProduct = async (req:Request, res:Response) => {
  * @param res - Response object
  */
 const getProductById = async (req:Request, res:Response) => {
-    //1. get product the product count
-    // 2. format the product the product count with pagiation res -> { count, data}
     
 }
 
@@ -95,7 +93,17 @@ const getProductById = async (req:Request, res:Response) => {
  */
 
 const getAllProducts = async (req:Request, res:Response) => {
+    //1. get product the product count
+    const productsCount = await prismaClient.product.count();
+    // 2. format the product the product count with pagiation res -> { count, data}
+    const allproducts = await prismaClient.product.findMany({
+        // @ts-ignore
+        skip: +req.query.skip || 0,
+        take: 2
+    })
 
+    res.status(200).json({ productsCount, allproducts})
+    
 }
 
 export { 
