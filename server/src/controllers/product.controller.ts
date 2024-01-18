@@ -83,7 +83,19 @@ const deleteProduct = async (req:Request, res:Response) => {
  * @param res - Response object
  */
 const getProductById = async (req:Request, res:Response) => {
-    
+    try {
+        const productId = req.params.id
+        const product = await prismaClient.product.findFirst({
+            where: { id: +productId}
+        })
+
+        if(!product) {
+            throw new NotFoundException("Product not found", ErrorCode.PRODUCT_NOT_FOUND)
+        }
+        res.status(200).json(product)
+    } catch (error) {
+        throw new NotFoundException("Product not found", ErrorCode.PRODUCT_NOT_FOUND)
+    }
 }
 
 /**
