@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import { prismaClient } from "../server";
 import { productValidation } from "../schema/product.validation";
 import { NotFoundException } from "../exceptions/404.exception";
-import { ErrorCode } from "../exceptions/root";
+import { ErrorCode } from '../exceptions/root';
 
 /**
  * 
@@ -34,9 +34,7 @@ const createProduct = async (req:Request, res:Response) => {
  */
 
 const updateProduct = async (req:Request, res:Response, next:NextFunction) => {
-
-    console.log("route reached ...")
-   
+  
     try {
          // get the product from request body
     const product = req.body
@@ -52,7 +50,6 @@ const updateProduct = async (req:Request, res:Response, next:NextFunction) => {
         }
     )
 
-    console.log(updatedproduct)
 
     res.status(200).json(updatedproduct)
     } catch (error) {
@@ -68,7 +65,16 @@ const updateProduct = async (req:Request, res:Response, next:NextFunction) => {
  * @param res - Response object
  */
 const deleteProduct = async (req:Request, res:Response) => {
+    try {
+    
+         await prismaClient.product.delete({
+            where: { id: +req.params.id}
+        })
 
+        res.status(200).json({ message: "Product deleted successfully"})
+    } catch (error) {
+        throw new NotFoundException("Product not found", ErrorCode.PRODUCT_NOT_FOUND)
+    }
 }
 
 /**
@@ -77,7 +83,9 @@ const deleteProduct = async (req:Request, res:Response) => {
  * @param res - Response object
  */
 const getProductById = async (req:Request, res:Response) => {
-
+    //1. get product the product count
+    // 2. format the product the product count with pagiation res -> { count, data}
+    
 }
 
 /**
