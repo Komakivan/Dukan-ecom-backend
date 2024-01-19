@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
 import { prismaClient } from "../server";
 import { addressvalidation } from "../schema/address.validation";
-import { Address, User } from "@prisma/client";
 import { NotFoundException } from "../exceptions/404.exception";
 import { ErrorCode } from '../exceptions/root';
 import { updateUserSchema } from "../schema/users.validation";
 import { BadRequestException } from "../exceptions/bad-requests";
-import { UnauthorizedException } from "../exceptions/auth-exception";
+
+
 
 /**
  * 
