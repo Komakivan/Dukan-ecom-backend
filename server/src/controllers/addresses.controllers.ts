@@ -11,19 +11,15 @@ import { ErrorCode } from '../exceptions/root';
  * @param res - Response object
  */
 const addAddress = async (req:Request, res:Response) => {
+
     addressvalidation.parse(req.body)
-    let user:User
-    // find a user or throw an error if not found
-    try {
-        user = await prismaClient.user.findFirstOrThrow({ where: { id: req.body.userId }})
-    } catch (error) {
-        throw new NotFoundException("User not found", ErrorCode.USER_NOT_FOUND)
-    }
+    
     // create a new address
     const address = await prismaClient.address.create({
         data: {
             ...req.body,
-            user: user.id
+            // @ts-ignore
+            userId: req?.user.id
         }
     })
 
@@ -56,18 +52,37 @@ const deleteAddress = async (req:Request, res:Response) => {
  */
 const getAllAddresses = async (req:Request, res:Response) => {
     // get the number of all addresses
-   const addressCount = await prismaClient.address.count()
-   const addresses = await prismaClient.address.findMany({
     // @ts-ignore
-    skip: req.query.skip || 0,
-    take: 10
+   const addressCount = await prismaClient.address.count({
+    where:{
+        // @ts-ignore
+        userId: req.user?.id,
+    }
+   })
+   const addresses = await prismaClient.address.findMany({
+        where: {
+            // @ts-ignore
+            userId: req.user?.id
+        }
    })
 
    res.status(200).json({ addressCount, addresses})
 }
 
+/**
+ * 
+ * @param req - the request object
+ * @param res - the response object
+ 
+ */
+
+const updateUser = async (req:Request, res:Response) => {
+
+}
+
 export {
     addAddress,
     deleteAddress,
-    getAllAddresses
+    getAllAddresses,
+    updateUser
 }

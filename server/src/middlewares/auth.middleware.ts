@@ -4,7 +4,7 @@ import { ErrorCode } from "../exceptions/root";
 import * as jwt from 'jsonwebtoken'
 import { JWT_SECRET_KEY } from "../secrets";
 import { prismaClient } from "../server";
-import { User } from "@prisma/client";
+
 
 /**
  * 
@@ -26,10 +26,11 @@ const authMiddleWare = async (req:Request, res:Response, next:NextFunction) => {
         // grab the payload
         const verified = jwt.verify(token, JWT_SECRET_KEY) as any
         const user = await prismaClient.user.findFirst({where: { id: verified.userId}})
+        console.log(user)
         if(!user) {
             return next(new UnauthorizedException("Unauthorized access +++", ErrorCode.UNAUTHORIZED))
         }
-        //@ts-ignore
+        // @ts-ignore
         req.user = user
         // res.status(200).json({message: "Access granted"})
         next()

@@ -7,5 +7,4 @@ export const addressvalidation  = z.object({
     city: z.string(),
     country: z.string(),
     pincode: z.string().max(6),
-    userId: z.number()
 })

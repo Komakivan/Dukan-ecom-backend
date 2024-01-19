@@ -20,6 +20,9 @@ model User {
   name String
   email String
   password String
+  defaultShippingAddress Int?
+  defaultBillingAddress Int?
+
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
   role Role @default(USER)
@@ -37,6 +40,8 @@ model Address {
   pincode String
   userId Int
   user User @relation(fields: [userId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@map("addresses")
 }
