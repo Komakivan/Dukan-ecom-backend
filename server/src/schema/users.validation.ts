@@ -11,3 +11,9 @@ export const loginSchema = z.object({
     email: z.string(),
     password: z.string().min(6)
 })
+
+export const updateUserSchema = z.object({
+    name: z.string().optional(),
+    defaultShippingAddress: z.number().optional(),
+    defaultBillingAddress: z.number().optional(),
+})

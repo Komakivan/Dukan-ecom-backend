@@ -26,6 +26,7 @@ export enum ErrorCode {
     UNAUTHORIZED = 8002,
     PRODUCT_NOT_FOUND = 4001,
     ADDRESS_NOT_FOUND = 6002,
+    NOT_YOUR_ADDRESS = 6003,
 }
 
 export default HttpException
