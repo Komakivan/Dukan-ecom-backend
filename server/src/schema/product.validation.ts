@@ -7,3 +7,7 @@ export const productValidation = z.object({
     price: z.number(),
     tags: z.array(z.string()),
 })
+
+export const cartValidation = z.object({
+    quantity: z.number().optional(),
+})
