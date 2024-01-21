@@ -93,6 +93,7 @@ model Order {
   user User @relation(fields: [userId], references: [id])
   netAmount Decimal
   address String
+  status OrderEventStatus @default(PENDING)
   products OrderProduct[]
   events OrderEvents[]
   created_at DateTime @default(now())

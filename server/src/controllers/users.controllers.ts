@@ -123,10 +123,26 @@ const updateUser = async (req: Request, res: Response) => {
 };
 
 
+const listAllUser = async (req: Request, res: Response) => {
+    //
+}
+
+
+const getUserById = async (req: Request, res: Response) => {
+
+}
+
+
+const changeUserRole = async (req: Request, res: Response) => {
+
+}
 
 export {
     addAddress,
     deleteAddress,
     getAllAddresses,
-    updateUser
+    updateUser,
+    listAllUser,
+    getUserById,
+    changeUserRole,
 }

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { addAddress, deleteAddress, getAllAddresses, updateUser } from "../controllers/addresses.controllers";
+import { addAddress, deleteAddress, getAllAddresses, updateUser } from "../controllers/users.controllers";
 import { errorHandler } from '../errorHandler';
 import authMiddleWare from "../middlewares/auth.middleware";
 import { adminMiddleware } from "../middlewares/admin.middleware";
