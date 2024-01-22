@@ -3,8 +3,10 @@ import { prismaClient } from "../server";
 import { addressvalidation } from "../schema/address.validation";
 import { NotFoundException } from "../exceptions/404.exception";
 import { ErrorCode } from '../exceptions/root';
-import { updateUserSchema } from "../schema/users.validation";
+import { changeRole, updateUserSchema } from "../schema/users.validation";
 import { BadRequestException } from "../exceptions/bad-requests";
+import { Role } from "@prisma/client";
+import { string } from "zod";
 
 
 
@@ -125,16 +127,51 @@ const updateUser = async (req: Request, res: Response) => {
 
 const listAllUser = async (req: Request, res: Response) => {
     //
+    const users = await prismaClient.user.findMany({
+        // @ts-ignore
+        skip: +req.query?.skip || 0,
+        take: 5
+    })
+
+    res.status(200).json(users)
+        
 }
 
 
 const getUserById = async (req: Request, res: Response) => {
+    const userId = +req.params.id;
+    const user = await prismaClient.user.findFirst({
+        where: {
+            id: userId
+        },
+        include: {
+            address: true
+        }
+    })
 
+    res.status(200).json(user);
 }
 
 
 const changeUserRole = async (req: Request, res: Response) => {
-
+    const validatedRole = changeRole.parse(req.body)
+    try {
+        const user = await prismaClient.user.update({
+            where: {
+                // @ts-ignore
+                id: +req.params?.id
+            },
+            data: {
+                // @ts-ignore
+                role: req.body.role
+            }
+        })
+    
+        res.status(200).json({ user, message: `role changed to ${user.role}`})
+    } catch (error) {
+        console.log(error)
+    }
+    
 }
 
 export {

@@ -142,9 +142,90 @@ const getOderById = async (req:Request, res:Response) => {
     res.status(200).json(order)
 }
 
+
+const listAllOrders =  async (req:Request, res:Response) => {
+
+    let whereCluase = {}
+    const status = req.query.status;
+    if(status) {
+        whereCluase = {
+            status
+        }
+    }
+    const count = await prismaClient.order.count()
+    const orders = await prismaClient.order.findMany({
+        where: whereCluase,
+        // @ts-ignore
+        skip: +req.query.skip || 0,
+        take: 5,
+        include: {
+            products: true
+        }
+    })
+
+    res.status(200).json({ count, orders})
+}
+
+
+const changeStatus = async (req:Request, res:Response) => {
+    const orderId = +req.params.id
+
+    // this two operations can be wrapped inside a transaction
+    const updatedOrder = await prismaClient.order.update({
+        where: {
+            id: orderId,
+        },
+        data: {
+            status: req.body.status
+        },
+        include: {
+            events: true
+        }
+    })
+
+    await prismaClient.orderEvents.create({
+        data: {
+            orderId: orderId,
+            orderStatus: req.body.status
+        }
+    })
+
+    res.status(201).json({updatedOrder, message: "Order updated successfully"})
+}
+
+
+
+const listOrderByUser = async (req:Request, res:Response) => {
+    // @ts-ignore
+    let whereClause: any = {
+        userId: +req.params.id
+    }
+    let status = req.query.status
+    if(status) {
+        whereClause = {
+            ...whereClause,
+            status
+        }
+    }
+    const orders = await prismaClient.order.findMany({
+        where: whereClause,
+        include: {
+            products: true,
+            events: true
+        }
+    })
+
+    res.status(200).json(orders)
+}
+
+
+
 export {
     createOrder,
     listOrders,
     cancelOrder,
     getOderById,
+    listAllOrders,
+    listOrderByUser,
+    changeStatus
 }

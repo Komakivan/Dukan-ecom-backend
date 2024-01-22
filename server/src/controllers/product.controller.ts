@@ -118,10 +118,35 @@ const getAllProducts = async (req:Request, res:Response) => {
     
 }
 
+
+const searchProducts = async (req: Request, res: Response) => {
+    const products = await prismaClient.product.findMany({
+        where: {
+            name: {
+                search: req.query.q?.toString()
+            },
+            description: {
+                search: req.query.q?.toString()
+            },
+            tags: {
+                search: req.query.q?.toString()
+            }
+        },
+        // @ts-ignore
+        skip: +req.query.skip || 0,
+        take: 10
+    })
+
+    res.status(200).json(products)
+}
+
+
+
 export { 
     createProduct,
     updateProduct,
     deleteProduct,
     getAllProducts,
     getProductById,
+    searchProducts
 }
